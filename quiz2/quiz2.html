@@ -433,6 +433,7 @@ text-align:center;
 
 <div id="qScreen">
 <audio id="anthem" src="anthem.mp3" preload="auto"></audio>
+<audio id="finalSong" src="lioliou.mp3" preload="auto"></audio>
 <button class="back" onclick="back()">⬅ Back</button>
 
 <div id="qBox" class="qBox"></div>
@@ -1288,9 +1289,13 @@ function showFinalWinner(){
       requestAnimationFrame(frame);
     }
   })();
+playFinalSong();
 }
 
 function closeFinalModal(){
+
+  stopFinalSong();
+
   document.getElementById("finalModal").style.display = "none";
 }
 
@@ -1300,7 +1305,18 @@ function playAnthem(){
   a.volume = 0.6;
   a.play();
 }
+function playFinalSong(){
+  let song = document.getElementById("finalSong");
+  song.currentTime = 0;
+  song.volume = 0.7;
+  song.play();
+}
 
+function stopFinalSong(){
+  let song = document.getElementById("finalSong");
+  song.pause();
+  song.currentTime = 0;
+}closeclose
 function stopAnthem(){
   let a = document.getElementById("anthem");
   a.pause();
@@ -1909,7 +1925,7 @@ z-index:9999;
     <p style="font-size:18px;line-height:1.6;text-align:left;">
 
 🎮 Το παιχνίδι έχει φτιαχτεί ιδανικά για 2 vs 2.<br><br>
-	Βάλτε το στον υπολογιστή και Fullscreen την σελίδα να γουστάρετε! <br><br>
+Βάλτε το στον υπολογιστή και Fullscreen να γουστάρετε <br><br>
 
 🎯 Κάθε ομάδα απαντά εναλλάξ<br>
 • Βάλτε ονόματα στις 2 ομάδες.<br>
