@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<title>QUIZBALLpro</title>
+
+<style>
+body{
+  background:#0f172a;
+  color:white;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  flex-direction:column;
+}
+
+h1{
+  font-size:70px;
+  margin-bottom:40px;
+}
+
+button{
+  padding:15px 40px;
+  font-size:22px;
+  border-radius:15px;
+  cursor:pointer;
+  margin:10px;
+}
+
+.quiz{
+  background:#2563eb;
+}
+</style>
+</head>
+
+<body>
+
+<h1>QUIZBALLpro</h1>
+
+<button onclick="showMenu()">Διάλεξε ποιο</button>
+
+<div id="menu" style="display:none;">
+  <button class="quiz" onclick="goQuiz('quiz1')">Quizball 1</button>
+  <button class="quiz" onclick="goQuiz('quiz2')">Quizball 2</button>
+</div>
+
+<script>
+function showMenu(){
+  document.getElementById("menu").style.display="block";
+}
+
+function goQuiz(q){
+  window.location.href = q + "/" + q + ".html";
+}
+</script>
+
+</body>
+</html>
