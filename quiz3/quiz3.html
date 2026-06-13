@@ -1,0 +1,2172 @@
+ΤΟ QUIZBALL ΑΥΤΟ ΔΗΜΙΟΥΡΓΗΘΗΚΕ ΣΤΙΣ 16/5/2026
+
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<title>Quizball PRO</title>
+
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center;margin:0;}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:15px 40px;}
+
+.team{width:180px;padding:10px;border-radius:15px;}
+.blue{background:#2563eb;}
+.red{background:#dc2626;}
+
+.team input{width:90%;text-align:center;font-size:18px;margin-bottom:8px;}
+
+.activeArrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:42px;
+  color:#facc15;
+  opacity:0;
+  text-shadow:0 0 10px #facc15;
+  pointer-events:none;
+}
+
+/* ΜΠΛΕ → δεξιά από το πλαίσιο και κοιτάει αριστερά */
+.arrowBlue{
+  right:-42px;
+}
+
+/* ΚΟΚΚΙΝΗ → αριστερά από το πλαίσιο και κοιτάει δεξιά */
+.arrowRed{
+  left:-42px;
+}
+
+.arrowActive{
+  animation:arrowBlink 1s infinite;
+}
+
+@keyframes arrowBlink{
+  0%{
+    opacity:0.2;
+  }
+  50%{
+    opacity:1;
+  }
+  100%{
+    opacity:0.2;
+  }
+}
+
+@keyframes arrowBlink{
+  0%{opacity:0.2;}
+  50%{opacity:1;}
+  100%{opacity:0.2;}
+}
+
+.team{
+  position:relative;
+}
+
+.helpRow{display:flex;justify-content:space-between;}
+
+.help{
+width:40px;height:40px;border-radius:50%;
+background:white;color:black;
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-weight:bold;
+}
+
+.blink{animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:0.3;}}
+
+.usedHelp{background:gray !important;cursor:not-allowed;}
+
+.score{font-size:42px;}
+.score input{width:90px;font-size:34px;text-align:center;}
+
+.timer{font-size:18px;margin-top:8px;}
+
+.container{display:flex;justify-content:center;gap:50px;padding:20px;}
+.col{width:420px;}
+.divider{width:3px;background:white;}
+
+.cat{padding:15px;margin:12px 0;border-radius:15px;display:flex;justify-content:space-between;font-size:20px;}
+.subs{display:flex;flex-wrap:wrap;gap:5px;}
+.subs button{padding:10px;font-size:16px;cursor:pointer;}
+
+.usedBlue{background:#60a5fa !important;}
+.usedRed{background:#f87171 !important;}
+
+.history{background:#b45309;}
+.geo{background:#0284c7;}
+.toms{background:#6366f1;}
+.player{background:#7c3aed;}
+.missing{background:#16a34a;}
+.top5{background:#22c55e;}
+.logo{background:#ea580c;}
+.photo{background:#475569;}
+.retro{background:#f59e0b;}
+.gossip{background:#f97316;}
+.updown{background:#06b6d4;}
+.fifty{background:#ef4444;}
+
+#qScreen{display:none;}
+.back{
+position:absolute;
+top:190px;
+left:30px;
+padding:12px 22px;
+font-size:18px;
+border-radius:12px;
+cursor:pointer;
+z-index:999;
+}
+
+img{max-width:500px;display:block;margin:20px auto;}
+
+.qBox{
+max-width:700px;
+margin:20px auto;
+padding:20px;
+border-radius:20px;
+font-size:26px;
+font-weight:bold;
+box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+.row{display:flex;justify-content:center;gap:10px;margin:6px;}
+.num{width:40px;background:#ddd;color:black;padding:8px;}
+.answer{width:250px;padding:10px;background:#16a34a;cursor:pointer;}
+.info{width:50px;background:#16a34a;padding:10px;}
+
+.wrongMain{
+  background:#dc2626;
+  color:white;
+  width:250px;
+  padding:10px;
+  font-weight:bold;
+  opacity:1 !important;
+}
+
+.wrongInfo{
+  background:#dc2626 !important;
+  color:white;
+}
+
+.wrongRow input{width:40px;height:40px;}
+
+#infoModal > div::-webkit-scrollbar {
+  width: 8px;
+}
+
+#infoModal div::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 10px;
+}
+.resultBtns button{margin:10px;padding:10px 20px;font-size:18px;cursor:pointer;}
+.revealAnswerAnim{
+  opacity:0;
+  transform: scale(0.8);
+  background:#16a34a;
+  transition: all 0.6s ease;
+}
+
+.revealAnswerAnim.show{
+  opacity:1;
+  transform: scale(1);
+}
+#main{
+  display:none;
+}
+.glitchBox{
+  background:#16a34a;
+  color:white;
+  opacity:0;
+  transform: scale(0.9);
+  filter: blur(6px);
+  letter-spacing: 8px;
+  transition: all 0.8s ease;
+}
+
+.glitchBox.reveal{
+  opacity:1;
+  transform: scale(1);
+  filter: blur(0);
+  letter-spacing: normal;
+}
+
+/* extra “σπασίματα” */
+.glitchText{
+  display:inline-block;
+  position:relative;
+}
+
+.glitchText::before,
+.glitchText::after{
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  width:100%;
+  overflow:hidden;
+  color:white;
+}
+
+.clubcombo{background:#8b5cf6;}
+
+.infoBtn{
+margin:10px auto 0;
+width:28px;
+height:28px;
+border-radius:50%;
+background:white;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+cursor:pointer;
+font-size:16px;
+transition:0.2s;
+}
+
+.infoBtn:hover{
+transform:scale(1.1);
+background:#e5e7eb;
+}
+.glitchText::before{
+  top:-2px;
+  left:2px;
+  text-shadow:-2px 0 red;
+  clip-path: inset(0 0 50% 0);
+}
+
+.glitchText::after{
+  top:2px;
+  left:-2px;
+  text-shadow:2px 0 blue;
+  clip-path: inset(50% 0 0 0);
+}
+
+.choiceBtn{
+margin-top:10px;
+padding:10px 20px;
+font-size:18px;
+border-radius:12px;
+cursor:pointer;
+}
+
+.choiceBox{
+margin-top:15px;
+display:flex;
+flex-direction:row;
+gap:20px;
+justify-content:center;   /* 👉 ΚΕΝΤΡΟ */
+align-items:center;
+}
+
+.revealAnim{
+  animation: tvReveal 0.9s ease forwards;
+  transform-style: preserve-3d;
+}
+
+@keyframes tvReveal{
+  0%{
+    transform: rotateY(90deg) scale(0.8);
+    opacity:0;
+  }
+  40%{
+    transform: rotateY(-15deg) scale(1.05);
+  }
+  60%{
+    transform: rotateY(10deg) scale(0.97);
+  }
+  100%{
+    transform: rotateY(0deg) scale(1);
+    opacity:1;
+  }
+}
+
+.whoScored{
+  background:#f43f5e;
+}
+video{
+  max-width:500px;
+  margin:20px auto;
+  display:block;
+  border-radius:12px;
+}
+
+.homeBtn{
+position:absolute;
+top:170px;
+left:30px;
+}
+#gameUI{
+  display:none;
+}
+#startScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#0f172a;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+
+#startBtn{
+  padding:25px 50px;
+  font-size:32px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.choice{
+background:#22c55e;
+padding:20px 40px;      /* 👉 μεγαλύτερο */
+border-radius:15px;
+font-size:26px;         /* 👉 μεγαλύτερα γράμματα */
+font-weight:bold;
+min-width:220px;        /* 👉 ίδιο μέγεθος κουμπιών */
+text-align:center;
+}
+
+
+/*ΑΠΟΚΡΥΨΗ ΚΑΤΗΓΟΡΙΑΣ*/
+.player .subs button:nth-child(4),
+.player .subs button:nth-child(8){
+  display:none;
+}
+
+
+
+</style>
+</head>
+
+<body>
+<div id="startScreen">
+  <button onclick="startGame()" id="startBtn">START GAME</button>
+</div>
+<div class="top">
+<div class="team blue">
+  <div class="activeArrow arrowBlue" id="arrow1">⬅</div>
+<input placeholder="Ομάδα 1">
+<div class="helpRow">
+<div class="help" onclick="useHelp(this)">📞</div>
+<div class="help" onclick="useHelp(this)">x2</div>
+<div class="help" onclick="useHelp(this)">50/50</div>
+<div class="help" onclick="useHelp(this)">💣</div>
+</div>
+<div class="timer" id="timer1"></div>
+</div>
+
+<div class="score">
+Σκορ<br>
+<input id="score1" value="0"> - <input id="score2" value="0">
+<div class="infoBtn" onclick="openInfo()">i</div>
+</div>
+
+<div class="team red">
+  <div class="activeArrow arrowRed" id="arrow2">➡</div>
+<input placeholder="Ομάδα 2">
+<div class="helpRow">
+<div class="help" onclick="useHelp(this)">📞</div>
+<div class="help" onclick="useHelp(this)">x2</div>
+<div class="help" onclick="useHelp(this)">50/50</div>
+<div class="help" onclick="useHelp(this)">💣</div>
+</div>
+<div class="timer" id="timer2"></div>
+</div>
+</div>
+
+<div id="main">
+<button class="homeBtn" onclick="goHome()">🏠 Αρχική</button>
+<div class="container">
+
+<div class="col">
+<div class="cat history">Ιστορία
+<div class="subs">
+<button onclick="openQ(this,'history','h1',1)">1</button>
+<button onclick="openQ(this,'history','h2',2)">2</button>
+<button onclick="openQ(this,'history','h3',3)">3</button>
+</div></div>
+
+<div class="cat geo">Γεωγραφία
+<div class="subs">
+<button onclick="openQ(this,'geo','g1',1)">1</button>
+<button onclick="openQ(this,'geo','g2',2)">2</button>
+<button onclick="openQ(this,'geo','g3',3)">3</button>
+</div></div>
+
+<div class="cat toms">Tom's Questions
+<div class="subs">
+<button onclick="openQ(this,'toms','t1',1)">1</button>
+<button onclick="openQ(this,'toms','t2',2)">2</button>
+<button onclick="openQ(this,'toms','t3',3)">3</button>
+</div></div>
+
+<div class="cat player">Player ID<br>(χωρίς 50/50)
+<div class="subs">
+<button onclick="openQ(this,'player','p1',2)">2</button>
+<button onclick="openQ(this,'player','p2',2)">2</button>
+<button onclick="openQ(this,'player','p3',3)">3</button>
+<button onclick="openQ(this,'player','p4',2)">2</button>
+<button onclick="openQ(this,'player','p5',3)">3</button>
+<button onclick="openQ(this,'player','p6',3)">3</button>
+<button onclick="openQ(this,'player','p7',3)">3</button>
+<button onclick="openQ(this,'player','p8',3)">3</button>
+</div></div>
+
+<div class="cat missing">Ποιος λείπει;
+<div class="subs">
+<button onclick="openQ(this,'missing','m1',3)">3</button>
+<button onclick="openQ(this,'missing','m2',3)">3</button>
+<button onclick="openQ(this,'missing','m3',3)">3</button>
+<button onclick="openQ(this,'missing','m4',3)">3</button>
+<button onclick="openQ(this,'missing','m5',3)">3</button>
+<button onclick="openQ(this,'missing','m6',3)">3</button>
+</div></div>
+
+<div class="cat top5">Top 5<br>(χωρίς 50/50)
+<div class="subs">
+<button onclick="openQ(this,'top5','1',3)">3</button>
+<button onclick="openQ(this,'top5','2',3)">3</button>
+<button onclick="openQ(this,'top5','3',3)">3</button>
+<button onclick="openQ(this,'top5','4',3)">3</button>
+</div></div>
+
+<div class="cat logo">Logo
+<div class="subs">
+<button onclick="openQ(this,'logo','l1',1)">1</button>
+<button onclick="openQ(this,'logo','l2',2)">2</button>
+<button onclick="openQ(this,'logo','l3',3)">3</button>
+</div>
+</div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="col">
+
+<div class="cat whoScored">Video Quiz
+<div class="subs">
+<button onclick="openQ(this,'whoscored','w1',2)">2</button>
+<button onclick="openQ(this,'whoscored','w2',2)">2</button>
+</div></div>
+
+<div class="cat photo">Photo Quiz
+<div class="subs">
+<button onclick="openQ(this,'photo','ph1',1)">1</button>
+<button onclick="openQ(this,'photo','ph2',1)">1</button>
+</div></div>
+
+<div class="cat retro">Retro Transfer
+<div class="subs">
+<button onclick="openQ(this,'retro','r1',2)">2</button>
+<button onclick="openQ(this,'retro','r2',2)">2</button>
+</div></div>
+
+<div class="cat clubcombo">Club Combo<br>(χωρίς 50/50)
+<div class="subs">
+<button onclick="openQ(this,'clubcombo','c1',2)">2</button>
+<button onclick="openQ(this,'clubcombo','c2',2)">2</button>
+</div></div>
+
+<div class="cat gossip">Gossip
+<div class="subs">
+<button onclick="openQ(this,'gossip','gs1',1)">1</button>
+<button onclick="openQ(this,'gossip','gs2',2)">2</button>
+</div></div>
+
+<div class="cat updown">Πάνω-Κάτω(χωρίς 50/50)
+<div class="subs">
+<button onclick="openQ(this,'updown','u1',1)">1</button>
+<button onclick="openQ(this,'updown','u2',1)">1</button>
+</div></div>
+
+<div class="cat fifty">50-50(χωρίς 50/50)
+<div class="subs">
+<button onclick="openQ(this,'fifty','f1',1)">1</button>
+<button onclick="openQ(this,'fifty','f2',1)">1</button>
+</div></div>
+
+</div>
+
+</div>
+</div>
+
+<div id="qScreen">
+<audio id="anthem" src="anthem.mp3" preload="auto"></audio>
+<audio id="finalSong" src="lioliou.mp3" preload="auto"></audio>
+<button class="back" onclick="back()">⬅ Back</button>
+
+<div id="qBox" class="qBox"></div>
+<div id="answerToggleBox" style="margin-top:10px;">
+  <button onclick="toggleAnswer()" style="
+    padding:10px 20px;
+    font-size:18px;
+    border-radius:10px;
+    cursor:pointer;
+    background:#334155;
+    color:white;
+  ">
+    Εμφάνισε τη σωστή απάντηση
+  </button>
+
+  <div id="answerBox" style="
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    background:#16a34a;
+    display:none;
+    font-size:20px;
+    font-weight:bold;
+  ">
+  </div>
+</div>
+<img id="img">
+<div id="top5box"></div>
+<div id="fiftyHelperBox"></div>
+
+<div class="resultBtns">
+<p>Βρέθηκε η απάντηση ή δεν;</p>
+<button onclick="correct()">Βρέθηκε</button>
+<button onclick="wrong()">Είναι άσχετοι</button>
+</div>
+</div>
+
+<div id="top5Modal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:#1e293b;
+padding:30px;
+border-radius:20px;
+max-width:500px;
+max-height:80vh;
+overflow-y:auto;
+text-align:left;
+box-shadow:0 0 25px black;
+position:relative;
+">
+
+<button onclick="closeTop5Modal()" style="
+position:absolute;
+top:10px;
+left:10px;
+padding:8px 12px;
+font-size:14px;
+border-radius:8px;
+cursor:pointer;
+background:#334155;
+color:white;
+border:none;
+">
+⬅ Back
+</button>
+
+    <h2 style="margin-bottom:20px;">
+      Βρέθηκαν όλα ή σταμάτησαν στα 4;
+    </h2>
+
+    <div style="display:flex;gap:20px;justify-content:center;">
+
+      <button onclick="top5All()" style="
+      padding:15px 25px;
+      font-size:20px;
+      border-radius:12px;
+      cursor:pointer;
+      background:#22c55e;
+      ">
+        Όλα αντρικά
+      </button>
+
+      <button onclick="top5Four()" style="
+      padding:15px 25px;
+      font-size:20px;
+      border-radius:12px;
+      cursor:pointer;
+      background:#f97316;
+      ">
+        Μόνο 4
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+let currentQA = null;
+/* 🔥 ROOT FOLDER ΓΙΑ ΕΥΚΟΛΑ PATHS */
+const IMG_BASE = "";
+
+function imgPath(p){
+  return IMG_BASE + p;
+}
+
+function playSound(type){
+let ctx=new (window.AudioContext||window.webkitAudioContext)();
+let osc=ctx.createOscillator();
+let gain=ctx.createGain();
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+/* 🔊 louder overall */
+gain.gain.setValueAtTime(0.9,ctx.currentTime);
+
+if(type==="ok"){
+  // 🔔🔔 DOUBLE TV QUIZ BELL (καθαρό, χωρίς “πουλάκι”)
+
+  osc.type = "sine";
+
+  const now = ctx.currentTime;
+
+  // πρώτο "ding"
+  osc.frequency.setValueAtTime(1200, now);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(4, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+  // δεύτερο "ding" λίγο μετά
+  setTimeout(() => {
+    let osc2 = ctx.createOscillator();
+    let gain2 = ctx.createGain();
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(1400, ctx.currentTime);
+
+    gain2.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.8, ctx.currentTime + 0.01);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+
+    osc2.start();
+    osc2.stop(ctx.currentTime + 0.2);
+  }, 160);
+}
+
+else if(type==="fail"){
+// 🔊 STRONG BUZZER
+osc.type="square";
+
+osc.frequency.setValueAtTime(180,ctx.currentTime);
+osc.frequency.linearRampToValueAtTime(90,ctx.currentTime+0.25);
+
+gain.gain.setValueAtTime(1.5,ctx.currentTime); // πιο δυνατά
+gain.gain.linearRampToValueAtTime(0.3,ctx.currentTime+0.3);
+
+}
+else if(type==="reveal"){
+// TOP5 reveal sound
+osc.type="sine";
+
+osc.frequency.setValueAtTime(500,ctx.currentTime);
+osc.frequency.linearRampToValueAtTime(850,ctx.currentTime+0.2);
+}
+else if(type==="lose"){
+  // ⚡ ΚΕΡΑΥΝΟΣ
+  osc.type = "sawtooth";
+
+  osc.frequency.setValueAtTime(80, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(30, ctx.currentTime + 0.5);
+
+  gain.gain.setValueAtTime(2, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+}
+
+osc.start();
+osc.stop(ctx.currentTime+0.4);
+}
+
+function startSuspenseMusic(){
+
+  let ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  let freq = 200;
+
+  suspenseInterval = setInterval(() => {
+
+    let osc = ctx.createOscillator();
+    let gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.type = "triangle";
+
+    // ανεβαίνει λίγο-λίγο → δημιουργεί αγωνία
+    freq += 15;
+    if(freq > 800) freq = 200;
+
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.3);
+
+  }, 250);
+}
+
+function stopSuspenseMusic(){
+  clearInterval(suspenseInterval);
+  suspenseInterval = null;
+}
+
+let replayMode = false;
+let top5CanStop = false;
+let gameFinished = false;
+let btn,turn=0,currentPoints=0;
+let lockedQuestions = new Set();
+let suspenseAudio = null;
+let suspenseInterval = null;
+let timerInterval,seconds=0;
+let currentTop5Answers = [];
+let foundAnswers = [];
+let wrongAnswersCustom = [];
+
+let activeTeam = 1;
+let gameLocked = false;
+let isTop5 = false;
+let wrongAttempts = 0;
+let top5Locked = false;
+
+function addPoints(){
+
+  let score1 = document.getElementById("score1");
+  let score2 = document.getElementById("score2");
+
+  let points = currentPoints;
+
+  // ✔ σωστή ομάδα από global state
+  let team = activeTeam;
+
+  let teamBox = (team === 1)
+    ? document.querySelector(".blue")
+    : document.querySelector(".red");
+
+  let helps = teamBox.querySelectorAll(".help");
+
+  let x2 = helps[1].classList.contains("blink");
+  let fifty = helps[2].classList.contains("blink");
+
+  // 🎯 LOGIC ΣΩΣΤΩΝ ΠΟΝΤΩΝ
+  if(x2 && fifty){
+    points = 2;
+  }
+  else if(x2){
+    points = points * 2;
+  }
+  else if(fifty){
+    points = 1;
+  }
+
+  // 💣 ΝΕΑ ΛΟΓΙΚΗ: ΒΟΜΒΑ ΑΝΤΙΠΑΛΗΣ ΜΕΙΩΝΕΙ ΤΟ SCORE ΚΑΤΑ 1 ΠΟΝΤΟ
+  let opponentBox = (activeTeam === 1)
+    ? document.querySelector(".red")
+    : document.querySelector(".blue");
+
+  let opponentHelps = opponentBox.querySelectorAll(".help");
+  let opponentBomb = opponentHelps[3].classList.contains("blink");
+
+  if(opponentBomb){
+    points = points - 1;
+  }
+
+  if(points < 0){
+    points = 0;
+  }
+
+  // ✔ ΣΩΣΤΗ ΟΜΑΔΑ ΠΑΝΤΑ
+  if(team === 1){
+    score1.value = parseInt(score1.value || 0) + points;
+  }else{
+    score2.value = parseInt(score2.value || 0) + points;
+  }
+
+  // reset helps ομάδας που απάντησε
+  helps.forEach(h => {
+    if(h.classList.contains("blink")){
+      h.classList.remove("blink");
+      h.classList.add("usedHelp");
+    }
+  });
+
+  // reset helps αντίπαλης ομάδας
+  opponentHelps.forEach(h => {
+    if(h.classList.contains("blink")){
+      h.classList.remove("blink");
+      h.classList.add("usedHelp");
+    }
+  });
+}
+
+/* QUESTIONS */
+let questions = {
+
+history:{
+  h1:{
+    q:"Ποιος ποδοσφαιριστής είναι 1ος σε ασσίστ στη Stoiximan Super League φέτος;",
+    a:"Andrija Zivkovic",
+    choices:["Andrija Zivkovic","Taison"]
+  },
+  h2:{
+    q:"Ποια είναι η μοναδική ομάδα στα Top7 πρωταθλήματα που παραμένει αήττητη;",
+    a:"Μπενφίκα",
+    choices:["Πόρτο","Μπενφίκα"]
+  },
+  h3:{
+    q:"Μαζί με την Μπαρτσελόνα, ποια ομάδα μετράει τους περισσότερους αποκλεισμούς σε ημιτελικό Champions League(1992 και μετά) με 8;",
+    a:"Ρεαλ Μαδρίτης",
+    choices:["Μπάγερν Μονάχου","Ρεάλ Μαδρίτης"]
+  }
+},
+
+geo:{
+  g1:{
+    q:"Σε πόσες χώρες έχει αγωνιστεί ο Mario Balotelli;",
+    a:"6",
+    choices:["6","7"]
+  },
+  g2:{
+    q:"Ποια είναι η πιο νότια ομάδα βάση έδρας που έχει κατακτήσει Europa League;",
+    a:"Σεβίλλη",
+    choices:["Σεβίλλη","Αταλάντα"]
+  },
+  g3:{
+    q:"Σε ποια χώρα βρίσκεται το γήπεδο Papara Park;",
+    a:"Τουρκία",
+    choices:["Τουρκία","Ουγγαρία"]
+  }
+},
+
+toms:{
+  t1:{
+    q:"Ποια είναι η μοαδνική μη ευρωπαϊκή ομάδα που έχει κατακτήσει 2 φορές το παγκόσμιο κύπελλο συλλόγων FIFA, περισσότερες από κάθε άλλη μη ευρωπαϊκή ομάδα;",
+    a:"Κορίνθιανς",
+    choices:["Σάο Πάολο","Κορίνθιανς"]
+  },
+  t2:{
+    q:"Ποια ομάδα τερματίσει τις περισσότερες φορές στην 3η θέση της Premier League (1992-93 και μετά);",
+    a:"Λίβερπουλ με 7 φορές",
+    choices:["Τσέλσι","Λίβερπουλ"]
+  },
+  t3:{
+    q:"Ποιος είναι ο μοναδικός ποδοσφαιριστής που έχει κατακτήσει 4 από τα 5 κορυφαία πρωταθλήματα της ευρώπης;",
+    a:"Joao Cancelo",
+    choices:["Arturo Vidal","Joao Cancelo"]
+  }
+},
+
+
+logo:{
+  l1:{
+    q:"Ποια ομάδα είναι;",
+    img:imgPath("logo/1.png"),
+    a:"Βενέτσια",
+    choices:["Βερόνα","Βενέτσια"]
+  },
+  l2:{
+    q:"Ποια ομάδα είναι;",
+    img:imgPath("logo/2.png"),
+    a:"Τουν",
+    choices:["Σιόν","Τουν"]
+  },
+  l3:{
+    q:"Ποια ομάδα είναι;",
+    img:imgPath("logo/3.png"),
+    a:"Πετροκούμπ",
+    choices:["Πετροκούμπ","Φόλκερκ"]
+  }
+},
+
+player:{
+  p1:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/1.png"), a:"Luuk De Jong" },
+  p2:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/2.png"), a:"Radamel Falcao" },
+  p3:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/3.png"), a:"Goran Pandev" },
+  p4:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/4.png"), a:"-" },
+  p5:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/5.png"), a:"Fabian Delph" },
+  p6:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/6.png"), a:"Suso" },
+  p7:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/7.png"), a:"Eric Bailly" },
+  p8:{ q:"Ποιος είναι ο παίκτης;", img:imgPath("playerid/8.png"), a:"-" }
+},
+
+photo:{
+  ph1:{
+    q:"Από ποια χρονιά είναι η φώτο της Άεκ;",
+    img:imgPath("photo/1.jpg"),
+    a:"2018(καλοκαίρι προκριματικά)",
+    choices:["2017","2018"]
+  },
+  ph2:{
+    q:"Ποιος ποδοσφαιριστής είναι ο εικονιζόμενος;",
+    img:imgPath("photo/2.jpg"),
+    a:"Carlos Tevez",
+    choices:["Sergio Aguero","Carlos Tevez"]
+  }
+},
+
+missing:{
+  m1:{ q:"Euro 2016, Φάση των 16, Ιταλία-Ισπανία 2-0. Ποιος παίκτης λείπει από την εντεκάδα της Ισπανίας;", img:imgPath("pl/1.jpg"), a:"Cesc Fabregas",
+    choices:["Cesc Fabregas","Thiago Alcantara"] },
+  m2:{ q:"Euro 2016, Φάση των 16, Αγγλία-Ισλανδία 1-2. Ποιος παίκτης λείπει από την εντεκάδα της Αγγλίας;", img:imgPath("pl/2.jpg"), a:"Dele Alli",
+    choices:["Jack Wilshere","Dele Alli"] },
+  m3:{ q:"Euro 2016, Ημιτελικός, Γερμανία-Γαλλία 0-2. Ποιος ποδοσφαιριστής λείπει από την εντεκάδα της Γερμανίας;", img:imgPath("pl/3.jpg"), a:"Julian Draxler",
+    choices:["Julian Draxler","Lucas Podolski"] },
+  m4:{ q:"Uefa Nations League 2021, Φάση Ομίλων, Κροατία-Πορτογαλία 1-2. Ποιος ποδοσφαιριστής λείπει από την ομάδα της πορτογαλίας;", img:imgPath("pl/4.jpg"), a:"Ruben Semedo",
+    choices:["Ruben Semedo","Jose Fonte"] },
+  m5:{ q:"Mundial 2022, Προημιτελικός, Μαρόκο-Πορτογαλία 1-0. Ποιος ποδοσφαιριστής λείπει από την ομάδα της Πορτογαλίας;", img:imgPath("pl/5.jpg"), a:"Otavio",
+    choices:["Ricardo Horta","Otavio"] },
+  m6:{ q:"Uefa Nations League 2024, Φάση Ομίλων, Ιταλία-Γαλλία 1-3. Ποιος ποδοσφαιριστής λείπει από την ομάδα της Γαλλίας;", img:imgPath("pl/6.jpg"), a:"Matteo Guendouzi",
+    choices:["Warren Zaire-Emery","Matteo Guendouzi"] }
+},
+
+clubcombo:{
+  c1:{
+    q:"Πείτε μου έναν ποδοσφαιριστή που έχει αγωνιστεί(τουλάχιστον 1 συμμετοχή) με τις φανέλες των Άρσεναλ και Σεβίλλη.",
+    a:"Όλοι οι παίκτες: Alexis Sanchez, Samir Nasri, Denis Suarez, Jose Antonio Reyes, Julio Baptista, Albert Sambi Lokonga, Sebastien Squillaci, Davor Suker"
+  },
+  c2:{
+    q:"Πείτε μου εναν ποδοσφαιριστή που έχει αγωνιστεί(τουλάχιστον 1 συμμετοχή) με τις φανέλες των Έβερτον και Μονακό.",
+    a:"Όλοι οι παίκτες: James Rodriguez, Djibril Sidibe, Maarten Stekelenburg, Alex Nyarko, Mickael Madar, John Collins, Lacina Traore"
+  }
+},
+
+updown:{
+  u1:{
+    q:"Ποιος ποδοσφαιριστής είναι πιο ψηλός σύμφωνα με το wikipedia;",
+    choices:["Ibrahima Konate","Olivier Giroud"],
+    a:"Ibrahima Konate για 2 εκατοστά."
+  },
+  u2:{
+    q:"Ποιος ποδοσφαιριστής είναι μεγαλύτερος σε ηλικία;",
+    choices:["Δημήτρης Κουρμπέλης","Γιάννης Κώτσιρας"],
+    a:"Γιάννης Κώτσιρας για 1 χρόνο."
+  }
+},
+
+whoscored:{
+  w1:{
+    q:"Ποιος σκόραρε το παρακάτω γκολ;",
+    video:"videos/1.mp4",
+    a:"Federico Chiesa εναντίον της Έμπολι",
+    choices:["Federico Chiesa","Cristiano Ronaldo"]
+  },
+  w2:{
+    q:"Ποιος σκόραρε το παρακάτω γκολ;",
+    video:"videos/2.mp4",
+    a:"Heung-Min Son εναντίον της Άστον Βίλα",
+    choices:["Alphonso Davies","Heung-Min Son"]
+  }
+},
+
+fifty:{
+  f1:{
+    q:"Ο David Alaba και ο Toni Kroos είναι οι μόνοι ποδοσφαιριστές που έχουν κατακτήσει Champions League(1992 και μετά) με τις φανέλες των Ρεαλ μαδρίτης και Μπαγερν Μοναχου. ",
+    choices:["Σωστό","Λάθος"],
+    a:"Σωστό"
+  },
+  f2:{
+    q:"Πόσοι τελικοί Champions League(1992 και μετά) έχουν κριθεί στα πέναλτι;",
+    choices:["6","7"],
+    a:"7"
+  }
+},
+
+retro:{
+  r1:{
+    q:"Ποιος ποδοσφαιριστής μετακόμισε απο την Ρόμα στην Ίντερ το καλοκαίρι του 2020;",
+    a:"Aleksandar Kolarov",
+    choices:["Edin Dzeko","Alexandar Kolarov"] 
+  },
+  r2:{
+    q:"Ποιος ποδοσφαιριστής μετακόμισε από τη Γιουβέντους στην Παρί σεν Ζερμέν το καλοκαίρι του 2018;",
+    a:"Gianluigi Buffon",
+    choices:["Gianluigi Buffon","Blaise Matuidi"] 
+  }
+},
+
+gossip:{
+  gs1:{
+    q:"Ποια αγγλική ομάδα έκανε πρόσφατα συνεργασία με την Πέππα το γουρουνάκι και διαμαρτυρήθηκαν έντονα οι οπαδοί της;",
+    a:"Τόττεναμ",
+    choices:["Έβερτον","Τόττεναμ"] 
+  },
+  gs2:{
+    q:"Σε ποια αγγλική ομάδα ανήκει ο Oliver Arblaster ο οποίος άφησε πρόσφατα έγκυο την κόρη του προπονητή του;",
+    a:"Σεφιλντ Γιουάιτεντ",
+    choices:["Σέφιλντ Γιουνάιτεντ","Σέφιλντ Γουέντστεϊ"] 
+  }
+}
+};
+
+
+/* TOP5 FULL */ let top5data={ "1":{
+ q:"Ποιοι είναι οι Top 5  ποδοσφαιριστές που με την φανέλα της Τσέλσι έχουν καταγράψει τις περισσότερες συμμετοχές στο Champions League(1992 και μετά),σύμφωνα με το Transfermarkt;",
+ answers:[
+  {a:"John Terry",p:"109"},
+  {a:"Frank Lampard",p:"102"},
+  {a:"Petr Cech",p:"94"},
+  {a:"Didier Drogba",p:"74"},
+  {a:"Cesar Azpilicueta",p:"63"}
+ ],
+ wrong:[
+  {a:"Ashley Cole",p:"60",pos:"6"},
+  {a:"John Obi Mikel",p:"59",pos:"7"},
+  {a:"Branislav Ivanovic",p:"58",pos:"8"},
+  {a:"Joe Cole",p:"50",pos:"9"},
+  {a:"Claude Makelele",p:"49",pos:"10"},
+  {a:"Michael Essien",p:"49",pos:"10-1"},
+  {a:"Salomon Kalou",p:"49",pos:"10-2"},
+  {a:"Ricardo Carvalho",p:"47",pos:"13"},
+  {a:"Florent Malouda",p:"47",pos:"13-1"},
+  {a:"Ramires",p:"45",pos:"15"}
+ ]
+},
+ "2":{ q:"Ποιοι είναι οι Top 5 ποδοσφαιριστές που με τη φανέλα της Μάντσεστερ Γιουνάιτεντ έχουν σκοράρει τα περισσότερα γκολ στο Champions League(1992 και μετά),σύφμωνα με το transfermarkt;",
+ answers:[ 
+ {a:"Ruud van Nistelrooy",p:"35"}, 
+ {a:"Wayne Rooney",p:"30"},
+ {a:"Ryan Giggs",p:"28"}, 
+ {a:"Paul Scholes",p:"24"},
+ {a:"Cristiano Ronaldo",p:"21"}
+ ],
+ wrong:[
+  {a:"Ole Gunnar Solskjaer",p:"19",pos:"6"},
+  {a:"Andy Cole",p:"18",pos:"7"},
+  {a:"David Becham",p:"14",pos:"8"},
+  {a:"Roy Keane",p:"14",pos:"8-1"},
+  {a:"Marcus Rashford",p:"12",pos:"10"},
+  {a:"Dwight Yorke",p:"11",pos:"11"},
+  {a:"Teddy Sheringham",p:"9",pos:"12"},
+  {a:"Chicharito",p:"7",pos:"13"},
+  {a:"Romelu Lukaku",p:"7",pos:"13-1"},
+  {a:"Robin Van Persie",p:"7",pos:"13-2"}
+ ]
+},
+ "3":{ q:"Ποιοι είναι οι Top 5 εν ενεργεία(με ενεργό συμβόλαιο σε ομάδα) ποδοσφαιριστές που με τη φανέλα της Άρσεναλ έχουν καταγράψει τις περισσότερες συμμετοχές στην ιστορία του Champions League(1992 και μετά), σύμφωνα με το transfermarkt;",
+ answers:[ 
+ {a:"David Raya",p:"35"},
+ {a:"Declan Rice",p:"35"},
+ {a:"Leandro Trossard",p:"33"}, 
+ {a:"William Saliba",p:"32"},
+ {a:"Gabriel Martinelli",p:"32"} 
+],
+ wrong:[
+  {a:"Gabriel",p:"30",pos:"6"},
+  {a:"Ben White",p:"30",pos:"6-1"},
+  {a:"Olivier Giroud",p:"29",pos:"8"},
+  {a:"Oxlade Chaberlain",p:"29",pos:"8-1"},
+  {a:"Santi Cazorla",p:"28",pos:"10"},
+  {a:"Bukayo Saka",p:"28",pos:"10-1"},
+  {a:"Martin Odegaard",p:"27",pos:"12"},
+  {a:"Wojciech Szczesny",p:"23",pos:"13"},
+  {a:"Kai Havertz",p:"23",pos:"13-1"},
+  {a:"Alexis Sanchez",p:"22",pos:"15"}
+ ]
+},
+ "4":{ q:"Ποιοι είναι οι Top 5 εν ενεργεία(με ενεργό συμβόλαιο σε ομάδα) ποδοσφαιριστές που με τη φανέλα της Ατλέτικο Μαδρίτης έχουν σκοράρει τα περισσότερα γκολ στην ιστορία του Champions League(1992 και μετά), σύμφωνα με το transfermarkt;",
+ answers:[
+ {a:"Antoine Griezmann",p:"40"}, 
+ {a:"Julian Alvarez",p:"17"}, 
+ {a:"Saul Niguez",p:"11"},
+ {a:"Marcos Llorente",p:"9"}, 
+ {a:"Alvaro Morata",p:"8"}
+],
+ wrong:[
+  {a:"Joao Feli",p:"7",pos:"6"},
+  {a:"Angel Correa",p:"6",pos:"7"},
+  {a:"Alexander Sorloth",p:"6",pos:"7-1"},
+  {a:"Koke",p:"5",pos:"9"},
+  {a:"Jose Maria Gimenez",p:"5",pos:"9-1"},
+  {a:"Yannick Carrasco",p:"5",pos:"9-2"},
+  {a:"Rodrigo De Paul",p:"3",pos:"12"},
+  {a:"Mario Hermoso",p:"3",pos:"12-1"},
+  {a:"Giuliano Simeone",p:"3",pos:"12-2"},
+  {a:"Samuel Lino",p:"3",pos:"12-3"}
+ ]
+}
+ };
+
+function openQ(b,cat,id,points){
+stopAnthem();
+isTop5 = (cat === "top5");
+let key = cat + "_" + id;
+
+if(lockedQuestions.has(key) && !gameFinished){
+  return; // ❌ ήδη παίχτηκε
+}
+
+if(!gameFinished){
+  lockedQuestions.add(key);
+}
+
+// καθάρισε τυχόν παλιά blink
+document.querySelectorAll(".help").forEach(h => {
+  h.classList.remove("blink");
+});
+btn=b;
+currentPoints=points;
+activeTeam=(turn%2==0)?1:2;
+updateTurnArrow();
+updateHelpLock();
+startTimer();
+document.getElementById("fiftyHelperBox").innerHTML = "";
+main.style.display="none";
+qScreen.style.display="block";
+
+let qBox=document.getElementById("qBox");
+currentQA = null;
+document.getElementById("answerBox").style.display = "none";
+document.getElementById("answerBox").innerText = "";
+document.getElementById("answerToggleBox").style.display = "block";
+let img=document.getElementById("img");
+let box=document.getElementById("top5box");
+
+img.style.display="none";
+box.innerHTML="";
+qBox.className="qBox "+cat;
+
+if(cat==="clubcombo"){
+
+  let data = questions[cat][id];
+
+  qBox.innerText = data.q;
+  currentQA = data;
+
+  // 👉 ΔΕΙΧΝΕΙ ΜΟΝΟ ΤΟ ΚΟΥΜΠΙ ΑΠΑΝΤΗΣΗΣ
+  document.getElementById("answerToggleBox").style.display = "block";
+
+  return;
+}
+
+/* 50-50 & UPDOWN */
+if(cat==="fifty" || cat==="updown"){
+document.getElementById("answerToggleBox").style.display = "none";
+
+let data = questions[cat][id];
+
+qBox.innerText = data.q;
+currentQA = data;
+
+let btnShow = document.createElement("button");
+btnShow.className = "choiceBtn";
+btnShow.innerText = "Εμφάνισε τις πιθανές επιλογές";
+
+let choiceBox = document.createElement("div");
+choiceBox.className = "choiceBox";
+
+btnShow.onclick = ()=>{
+
+  choiceBox.innerHTML = `
+    <div class="choice">${data.choices[0]}</div>
+    <div class="choice">${data.choices[1]}</div>
+  `;
+
+  // 👉 δείξε answer button
+  document.getElementById("answerToggleBox").style.display = "block";
+
+  // 👉 εξαφάνισε το κουμπί επιλογών
+  btnShow.style.display = "none";
+};
+
+box.appendChild(btnShow);
+box.appendChild(choiceBox);
+
+return;
+}
+
+/* TOP5 */
+if(cat==="top5"){
+document.getElementById("answerToggleBox").style.display = "none";
+wrongAttempts = 0;
+top5Locked = false;
+isTop5 = true;
+top5CanStop = false;
+qBox.innerText=top5data[id].q;
+currentTop5Answers = top5data[id].answers;
+foundAnswers = [];
+wrongAnswersCustom = top5data[id].wrong || [];
+let inputRow = document.createElement("div");
+inputRow.style.margin = "15px";
+
+inputRow.innerHTML = `
+<input id="top5Input" placeholder="Γράψε απάντηση..." style="padding:10px;font-size:18px;">
+<button id="top5Btn" style="padding:10px 15px;">➡</button>
+`;
+
+setTimeout(() => {
+  const input = document.getElementById("top5Input");
+  const btn = document.getElementById("top5Btn");
+
+  btn.onclick = checkTop5Answer;
+
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkTop5Answer();
+    }
+  });
+
+}, 0);
+
+box.appendChild(inputRow);
+
+top5data[id].answers.forEach((x,i)=>{
+let row=document.createElement("div");
+row.className="row";
+
+row.innerHTML=`
+<div class="num">${i+1}</div>
+<div class="answer" onclick="revealTop5(this,'${x.a}','${x.p}')">?</div>
+<div class="info"></div>
+`;
+
+box.appendChild(row);
+});
+
+let wrong=document.createElement("div");
+wrong.className="row";
+
+wrong.innerHTML=`
+<div class="num" id="wrongPos"></div>
+<div class="answer wrongMain">Λάθος</div>
+<div class="info wrongInfo" id="wrongPoints"></div>
+`;
+
+box.appendChild(wrong);
+return;
+}
+
+if(questions[cat][id].img){
+let data = questions[cat][id];
+
+qBox.innerText = data.q;
+img.src = data.img;
+img.style.display = "block";
+
+currentQA = data;
+return;
+}
+
+let data = questions[cat][id];
+qBox.innerText = data.q;
+currentQA = data;
+// VIDEO SUPPORT
+if(data.video){
+
+  let video = document.createElement("video");
+  video.src = data.video;
+  video.controls = true;
+  video.style.maxWidth = "500px";
+  video.style.margin = "20px auto";
+  video.style.display = "block";
+
+  document.getElementById("top5box").appendChild(video);
+
+  let playBtn = document.createElement("button");
+  playBtn.innerText = "▶ Play";
+  playBtn.className = "choiceBtn";
+
+  playBtn.onclick = () => {
+    video.play();
+    playBtn.style.display = "none";
+  };
+
+  document.getElementById("top5box").appendChild(playBtn);
+}
+
+// 🔥 50/50 HELP ΓΙΑ ΟΛΕΣ ΤΙΣ ΚΑΤΗΓΟΡΙΕΣ (εκτός εξαιρέσεων)
+let teamBox = (activeTeam === 1)
+  ? document.querySelector(".blue")
+  : document.querySelector(".red");
+
+let helps = teamBox.querySelectorAll(".help");
+let fiftyActive = helps[2].classList.contains("blink");
+
+// ❌ εξαιρέσεις
+if(
+  fiftyActive &&
+  data.choices &&
+  cat !== "fifty" &&
+  cat !== "updown" &&
+  cat !== "clubcombo" &&
+  cat !== "top5"
+){
+
+  document.getElementById("answerToggleBox").style.display = "none";
+
+  let btnShow = document.createElement("button");
+  btnShow.className = "choiceBtn";
+  btnShow.innerText = "Δες τις 2 πιθανές απαντήσεις";
+
+  let choiceBox = document.createElement("div");
+  choiceBox.className = "choiceBox";
+
+  btnShow.onclick = ()=>{
+
+    choiceBox.innerHTML = `
+      <div class="choice">${data.choices[0]}</div>
+      <div class="choice">${data.choices[1]}</div>
+    `;
+
+    document.getElementById("answerToggleBox").style.display = "block";
+
+    btnShow.style.display = "none";
+  };
+
+  document.getElementById("top5box").appendChild(btnShow);
+  document.getElementById("top5box").appendChild(choiceBox);
+}
+
+}
+
+function openInfo(){
+  document.getElementById("infoModal").style.display = "flex";
+}
+
+function closeInfo(){
+  document.getElementById("infoModal").style.display = "none";
+}
+
+function back(){
+stopTimer();
+main.style.display="block";
+qScreen.style.display="none";
+
+if(!gameFinished){
+  if(turn%2==0){btn.classList.add("usedBlue");}
+  else{btn.classList.add("usedRed");}
+}
+
+if(!gameFinished){
+  turn++;
+  activeTeam = (turn % 2 === 0) ? 1 : 2;
+updateTurnArrow();
+}
+
+// καθαρό state (για να μην “κουβαλάνε” blink από πριν)
+document.querySelectorAll(".help").forEach(h => {
+  h.classList.remove("blink");
+});
+updateHelpLock();
+checkGameEnd();
+}
+
+function showFinalWinner(){
+
+  let s1 = parseInt(document.getElementById("score1").value || 0);
+  let s2 = parseInt(document.getElementById("score2").value || 0);
+
+  let name1 = document.querySelector(".blue input").value || "Ομάδα 1";
+  let name2 = document.querySelector(".red input").value || "Ομάδα 2";
+
+  let text = "";
+
+  if(s1 > s2){
+    text = `Η ομάδα "${name1}" κέρδισε με σκορ ${s1}-${s2}`;
+  }
+  else if(s2 > s1){
+    text = `Η ομάδα "${name2}" κέρδισε με σκορ ${s1}-${s2}`;
+  }
+  else{
+    text = `Το παιχνίδι ήρθε Χ με σκορ ${s1}-${s2}`;
+  }
+
+  document.getElementById("finalText").innerText = text;
+
+  document.getElementById("finalModal").style.display = "flex";
+
+  // 🎉 CONFETTI
+  let duration = 4000;
+  let end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+playFinalSong();
+}
+
+function closeFinalModal(){
+
+  stopFinalSong();
+
+  document.getElementById("finalModal").style.display = "none";
+}
+
+function playAnthem(){
+  let a = document.getElementById("anthem");
+  a.currentTime = 0;
+  a.volume = 0.6;
+  a.play();
+}
+function playFinalSong(){
+  let song = document.getElementById("finalSong");
+  song.currentTime = 0;
+  song.volume = 0.7;
+  song.play();
+}
+
+function stopFinalSong(){
+  let song = document.getElementById("finalSong");
+  song.pause();
+  song.currentTime = 0;
+}closeclose
+function stopAnthem(){
+  let a = document.getElementById("anthem");
+  a.pause();
+  a.currentTime = 0;
+}
+
+function startGame(){
+  playAnthem();
+
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("main").style.display = "block"; // ✅ ΑΥΤΟ
+}
+
+function correct(){
+
+  if(isTop5){
+    showTop5Choice();
+    return;
+  }
+
+  // 🔥 ΑΝ ΕΙΜΑΣΤΕ ΣΕ REPLAY MODE → ΜΗΝ ΜΠΑΙΝΕΙ ΣΚΟΡ
+  if(!replayMode){
+    addPoints();
+  }
+
+  playSound("ok");
+  back();
+}
+
+function showTop5Choice(){
+  document.getElementById("top5Modal").style.display = "flex";
+}
+
+function wrong(){
+
+  if(document.getElementById("qScreen").style.display !== "block"){
+    return;
+  }
+
+  if(!replayMode){
+    document.querySelectorAll(".help").forEach(h => {
+      if(h.classList.contains("blink")){
+        h.classList.remove("blink");
+        h.classList.add("usedHelp");
+      }
+    });
+  }
+
+  playSound("fail");
+  back();
+}
+
+function useHelp(e){
+// ❌ ΜΗΝ επιτρέπεις help εκτός ερώτησης
+if(document.getElementById("qScreen").style.display !== "block"){
+  return;
+}
+
+if(e.innerText === "50/50"){
+  let q = document.getElementById("qBox");
+
+  if(
+    q.classList.contains("player") ||
+    q.classList.contains("top5") ||
+    q.classList.contains("clubcombo") ||
+    q.classList.contains("updown") ||
+    q.classList.contains("fifty")
+  ){
+    return; // ⛔ δεν ενεργοποιείται καθόλου
+  }
+}
+
+  let teamBox = e.closest(".team");
+  let isBlue = teamBox.classList.contains("blue");
+
+  // 🔒 ΕΛΕΓΧΟΣ ΣΕΙΡΑΣ
+let isBomb = (e.innerText === "💣");
+
+// 🔒 ΕΛΕΓΧΟΣ ΣΕΙΡΑΣ
+if(!isBomb){
+  if(activeTeam === 1 && !isBlue) return;
+  if(activeTeam === 2 && isBlue) return;
+} 
+
+  // 🚫 ήδη χρησιμοποιημένο
+  if(e.classList.contains("usedHelp")) return;
+
+  // ✨ toggle blink μόνο για σωστή ομάδα
+  if(e.classList.contains("blink")){
+    e.classList.remove("blink");
+    e.classList.add("usedHelp");
+  } else {
+    e.classList.add("blink");
+  }
+
+// ✅ ΜΟΝΟ για 50/50
+if(e.innerText !== "50/50") return;
+  if(!currentQA || !currentQA.choices) return;
+
+  let box = document.getElementById("fiftyHelperBox");
+
+  // ΜΗΝ το ξαναφτιάχνει
+  if(box.innerHTML !== "") return;
+
+  let btn = document.createElement("button");
+  btn.className = "choiceBtn";
+  btn.innerText = "Δες τις 2 πιθανές απαντήσεις";
+
+  let choiceBox = document.createElement("div");
+  choiceBox.className = "choiceBox";
+
+  btn.onclick = ()=>{
+    choiceBox.innerHTML = `
+      <div class="choice">${currentQA.choices[0]}</div>
+      <div class="choice">${currentQA.choices[1]}</div>
+    `;
+    btn.style.display = "none";
+  };
+
+  box.appendChild(btn);
+  box.appendChild(choiceBox);
+}
+
+
+function startTimer(){
+seconds=0;
+clearInterval(timerInterval);
+
+timerInterval=setInterval(()=>{
+seconds++;
+
+let min=Math.floor(seconds/60);
+let sec=seconds%60;
+
+let t=`⏱ ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+
+if(activeTeam===1){
+timer1.innerText=t;
+timer2.innerText="";
+}else{
+timer2.innerText=t;
+timer1.innerText="";
+}
+
+},1000);
+}
+
+function stopTimer(){
+clearInterval(timerInterval);
+timer1.innerText="";
+timer2.innerText="";
+}
+
+function revealTop5(el, answer, points){
+
+  if(!top5Locked) return;
+
+  el.innerText = answer;
+  el.nextElementSibling.innerText = points;
+
+ [el, el.nextElementSibling].forEach(x=>{
+  x.classList.remove("revealAnim");
+  void x.offsetWidth;
+  x.classList.add("revealAnim");
+});
+
+  playBell();
+}
+
+function checkGameEnd(){
+
+  if(gameFinished) return; // 🛑 ΜΗΝ ξανατρέχει
+
+  if(lockedQuestions.size === 42){
+    gameFinished = true;
+    replayMode = true;   // 🔥 νέο
+    showFinalWinner();
+  }
+}
+
+function totalQuestionsCount(){
+
+  let count = 0;
+
+  for(let cat in questions){
+    count += Object.keys(questions[cat]).length;
+  }
+
+  return count;
+}
+
+function toggleAnswer(){
+
+  let box = document.getElementById("answerBox");
+
+  if(!currentQA || !currentQA.a){
+    box.style.display = "block";
+    box.innerText = "Δεν υπάρχει καταχωρημένη απάντηση";
+    return;
+  }
+
+  if(box.style.display === "block"){
+    box.style.display = "none";
+    box.classList.remove("reveal");
+    box.classList.remove("glitchBox");
+    return;
+  }
+
+  box.style.display = "block";
+startSuspenseMusic();
+  // 👉 αρχικό “σπασμένο”
+  box.classList.add("glitchBox");
+  box.classList.remove("reveal");
+
+  // 👉 βάζουμε glitch text
+  box.innerHTML = `<span class="glitchText" data-text="${currentQA.a}">${currentQA.a}</span>`;
+
+  // ⏳ delay πριν “ενώσει”
+  setTimeout(()=>{
+
+    box.classList.add("reveal");
+
+    // 👉 αφαιρούμε glitch layers για καθαρό αποτέλεσμα
+    setTimeout(()=>{
+      box.innerText = currentQA.a;
+    }, 300);
+	stopSuspenseMusic();
+    playSound("reveal");
+
+  }, 3000);
+}
+
+function playBell(){
+  let ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+  let osc1 = ctx.createOscillator();
+  let gain1 = ctx.createGain();
+
+  osc1.type = "sine";
+  osc1.frequency.setValueAtTime(1200, ctx.currentTime);
+
+  gain1.gain.setValueAtTime(0.0001, ctx.currentTime);
+  gain1.gain.exponentialRampToValueAtTime(1, ctx.currentTime + 0.01);
+  gain1.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+
+  osc1.connect(gain1);
+  gain1.connect(ctx.destination);
+
+  osc1.start();
+  osc1.stop(ctx.currentTime + 0.25);
+
+  // 🔔 δεύτερο "ντανγκ"
+  setTimeout(() => {
+    let osc2 = ctx.createOscillator();
+    let gain2 = ctx.createGain();
+
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(900, ctx.currentTime);
+
+    gain2.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.8, ctx.currentTime + 0.01);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+
+    osc2.start();
+    osc2.stop(ctx.currentTime + 0.25);
+  }, 150);
+}
+
+function updateHelpLock(){
+  let blue = document.querySelector(".blue");
+  let red = document.querySelector(".red");
+
+  if(activeTeam === 1){
+    // Μπλε παίζει → κόκκινη κλειδωμένη
+    blue.querySelectorAll(".help").forEach(h=>{
+      h.classList.remove("locked");
+    });
+    red.querySelectorAll(".help").forEach(h=>{
+      h.classList.add("locked");
+    });
+  } 
+  else {
+    // Κόκκινη παίζει → μπλε κλειδωμένη
+    red.querySelectorAll(".help").forEach(h=>{
+      h.classList.remove("locked");
+    });
+    blue.querySelectorAll(".help").forEach(h=>{
+      h.classList.add("locked");
+    });
+  }
+}
+updateHelpLock();
+updateTurnArrow();
+function updateTurnArrow(){
+
+  let a1 = document.getElementById("arrow1");
+  let a2 = document.getElementById("arrow2");
+
+  // καθάρισε και τα 2
+  a1.classList.remove("arrowActive");
+  a2.classList.remove("arrowActive");
+
+  a1.style.opacity = "0";
+  a2.style.opacity = "0";
+
+  // άναψε μόνο το σωστό
+  if(activeTeam === 1){
+    a1.style.opacity = "1";
+    a1.classList.add("arrowActive");
+  }
+  else{
+    a2.style.opacity = "1";
+    a2.classList.add("arrowActive");
+  }
+}
+
+function closeTop5StopModal(){
+  document.getElementById("top5StopModal").style.display = "none";
+  top5Locked = true; // 👉 ενεργοποιεί click reveal
+}
+
+function goHome(){
+  window.location.href = "../index.html";
+}
+function top5All(){
+  document.getElementById("top5Modal").style.display = "none";
+
+  addPoints();
+  playSound("ok");
+  back();
+}
+
+function top5Four(){
+  document.getElementById("top5Modal").style.display = "none";
+
+  let saved = currentPoints;
+  currentPoints = 1;
+
+  addPoints();
+
+  currentPoints = saved;
+
+  playSound("ok");
+  back();
+}
+function closeTop5Modal(){
+  document.getElementById("top5Modal").style.display = "none";
+}
+
+function normalize(str){
+  return str.toLowerCase().trim();
+}
+
+function checkTop5Answer(){
+
+if(top5Locked) return;
+let input = document.getElementById("top5Input");
+let value = normalize(input.value);
+
+if(!value) return;
+
+// ✔ ΣΩΣΤΑ
+for(let i=0;i<currentTop5Answers.length;i++){
+
+  let ans = currentTop5Answers[i];
+  let name = normalize(ans.a);
+
+ let words = name.split(" ");
+
+let isExactMatch =
+  value === name ||        // full name
+  words.includes(value);   // μία από τις λέξεις
+
+if(isExactMatch){
+
+    if(foundAnswers.includes(i)) return;
+
+    let rows = document.querySelectorAll("#top5box .row");
+    let row = rows[i];
+
+  row.children[1].innerText = ans.a;
+row.children[2].innerText = ans.p;
+
+[row.children[1], row.children[2]].forEach(el=>{
+  el.classList.remove("revealAnim");
+  void el.offsetWidth;
+  el.classList.add("revealAnim");
+});
+
+    foundAnswers.push(i);
+
+    playBell();
+// ✅ CHECK ΓΙΑ 4 ΣΩΣΤΑ + 1 ΛΑΘΟΣ
+if(foundAnswers.length === 4 && wrongAttempts === 1){
+
+  top5Locked = true;
+
+  setTimeout(() => {
+    document.getElementById("top5StopModal").style.display = "flex";
+  }, 2000); // 👉 1.5 δευτερόλεπτα (βάλε 2000 για 2s)
+}
+
+    input.value="";
+    return;
+  }
+}
+
+// ❌ CUSTOM WRONG
+for(let w of wrongAnswersCustom){
+
+  let name = normalize(w.a);
+
+  if(name.includes(value) || value.includes(name)){
+
+    let wrongRow = document.querySelector(".wrongMain");
+
+  let posBox = document.getElementById("wrongPos");
+let nameBox = document.querySelector(".wrongMain");
+let pointsBox = document.getElementById("wrongPoints");
+
+posBox.innerText = w.pos;
+nameBox.innerText = w.a;
+pointsBox.innerText = w.p;
+
+[posBox, nameBox, pointsBox].forEach(el=>{
+  el.classList.remove("revealAnim");
+  void el.offsetWidth;
+  el.classList.add("revealAnim");
+});
+
+wrongAttempts++;
+
+// ⭐ ΝΕΟ LOGIC (4 σωστά + 1 λάθος)
+if(foundAnswers.length === 4 && wrongAttempts === 1){
+
+  top5Locked = true;
+
+  setTimeout(() => {
+    document.getElementById("top5StopModal").style.display = "flex";
+  }, 1500);
+}
+
+if(wrongAttempts === 2){
+  top5Locked = true;
+  playSound("lose"); // ⚡ ΕΔΩ
+  document.getElementById("loseModal").style.display = "flex";
+  return;
+}
+ input.value="";
+    playSound("fail");
+    return;
+  }
+}
+
+// ❌ ΑΠΛΟ ΛΑΘΟΣ
+let wrongRow = document.querySelector(".wrongMain");
+let posBox = document.getElementById("wrongPos");
+let nameBox = document.querySelector(".wrongMain");
+let pointsBox = document.getElementById("wrongPoints");
+
+posBox.innerText = "-";
+nameBox.innerText = input.value;
+pointsBox.innerText = "-";
+
+
+[posBox, nameBox, pointsBox].forEach(el=>{
+  el.classList.remove("revealAnim");
+  void el.offsetWidth;
+  el.classList.add("revealAnim");
+});
+wrongAttempts++;
+
+// ⭐ ΝΕΟ LOGIC (4 σωστά + 1 λάθος)
+if(foundAnswers.length === 4 && wrongAttempts === 1){
+
+  top5Locked = true;
+
+  setTimeout(() => {
+    document.getElementById("top5StopModal").style.display = "flex";
+  }, 1500);
+}
+
+if(wrongAttempts === 2){
+  top5Locked = true;
+  playSound("lose"); // ⚡ ΕΔΩ
+  document.getElementById("loseModal").style.display = "flex";
+  return;
+}
+
+input.value="";
+playSound("fail");
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    let inp = document.getElementById("top5Input");
+    if(inp){
+      checkTop5Answer();
+    }
+  }
+});
+
+function closeLoseModal(){
+  document.getElementById("loseModal").style.display = "none";
+}
+
+</script>
+
+<div id="loseModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+  <div style="
+  background:#1e293b;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 0 20px black;
+  max-width:400px;
+  ">
+    <p style="font-size:20px;">
+      Δυστυχώς χάσατε την ερώτηση.<br>
+      Πατήστε κλικ πάνω στις θέσεις για να εμφανιστούν οι απαντήσεις.
+    </p>
+
+    <button onclick="closeLoseModal()" style="
+    margin-top:20px;
+    padding:10px 20px;
+    font-size:18px;
+    border-radius:10px;
+    cursor:pointer;
+    ">
+      ΟΚ
+    </button>
+  </div>
+</div>
+
+<div id="top5StopModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+  <div style="
+  background:#1e293b;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 0 20px black;
+  max-width:500px;
+  ">
+    <p style="font-size:20px;">
+      Μπορείτε να σταματήσετε και να πάρετε έναν πόντο στο σακουλάκι σας.<br><br>
+      Η τελευταία απάντηση εμφανιζεται με κλικ πάνω της.<br><br>
+      Αν θέλετε να σταματήσετε πατήστε πάνω στη σωστή απάντηση που δεν έχετε βρει για να εμφανιστεί και ύστερα επιλέξτε "Βρέθηκε"->"Μόνο 4".<br><br>
+      Αν δεν σταματήσετε, κλειδώστε απάντηση προφορικά, εμφανίστε την απάντηση με κλικ και ανάλογα επιλέγετε "Βρέθηκε"->"Όλα αντρικά" ή "Δεν βρέθηκε" 
+    </p>
+
+    <button onclick="closeTop5StopModal()" style="
+    margin-top:20px;
+    padding:10px 20px;
+    font-size:18px;
+    border-radius:10px;
+    cursor:pointer;
+    ">
+      ΟΚ
+    </button>
+  </div>
+</div>
+
+<div id="infoModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.75);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+  background:#1e293b;
+  padding:30px;
+  border-radius:20px;
+  max-width:500px;
+  max-height:80vh;       /* 🔥 ΒΑΣΙΚΟ */
+  overflow-y:auto;       /* 🔥 SCROLL */
+  text-align:center;
+  box-shadow:0 0 25px black;
+  position:relative;
+">
+
+    <button onclick="closeInfo()" style="
+    position:absolute;
+    top:10px;
+    left:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    background:#334155;
+    color:white;
+    border:none;
+    cursor:pointer;
+    ">
+    ⬅
+    </button>
+
+    <h2 style="margin-bottom:15px;">Οδηγίες Παιχνιδιού</h2>
+
+    <p style="font-size:18px;line-height:1.6;text-align:left;">
+
+🎮 Το παιχνίδι έχει φτιαχτεί ιδανικά για 2 vs 2.<br><br>
+Βάλτε το στον υπολογιστή και Fullscreen να γουστάρετε <br><br>
+
+🎯 Κάθε ομάδα απαντά εναλλάξ<br>
+• Βάλτε ονόματα στις 2 ομάδες.<br>
+• Η ομάδα που ξεκινάει είναι πάντα η μπλε για να μην γίνεται μπέρδεμα.<br><br>
+
+🗣️ Διαδικασία απάντησης:<br>
+• Η κάθε ομάδα κλειδώνει προφορικά μια απάντηση.<br>
+• Μετά πατάτε «Εμφάνισε τη σωστή απάντηση».<br>
+• Αν η απάντηση είναι σωστή πατάτε «Βρέθηκε».<br>
+• Αν είναι λάθος πατάτε «Είναι άσχετοι».<br><br>
+
+
+📊 Κατηγορία σκορ:<br>
+• Το σκορ ενημερώνεται αυτόματα.<br>
+• Αν κάτι πάει λάθος κατά τη διάρκεια, μπορείτε να το αλλάξετε και χειροκίνητα.<br><br>
+
+🧠 Βοήθειες:<br>
+• Όλες οι βοήθειες έχουν φτιαχτεί για να πατιούνται κατά τη διάρκεια της ερώτησης και όχι στο μενού των ερωτήσεων.<br>
+• Η κάθε ομάδα χρησιμοποιεί μόνο μία φορά την κάθε βοήθεια.<br>
+• Πατάτε μόνο μία φορά τη βοήθεια ώστε να αναβοσβήνει.<br>
+• Για να υπολογιστούν σωστά οι πόντοι, αφήστε τη βοήθεια να αναβοσβήνει.<br><br>
+
+• 📞 Τηλέφωνο → βοήθεια<br>
+• x2 → κάνει την ερώτηση να αξίζει διπλάσιους πόντους<br>
+• 50/50 → εμφανίζει 2 πιθανές επιλογές και κάνει την ερώτηση να αξίζει 1 πόντο<br><br>
+
+💣 Βόμβα:<br>
+• Πριν ξεκινήσει το παιχνίδι και αφού δείτε τις κατηγορίες, σημειώστε σε ένα χαρτί σε ποια ερώτηση τοποθετεί κάθε ομάδα τη βόμβα.<br>
+• Αν ο αντίπαλος επιλέξει και βρει την ερώτηση αυτή, τότε παίρνει -1 πόντο από τον υπολογισμένο.<br>
+• Αν την επιλέξει και δεν τη βρει, τότε παίρνει 0 πόντους.<br>
+• Αν την επιλέξετε εσείς, δεν γίνεται τίποτα και χάνεται η βοήθεια.<br><br>
+
+🔥 Top 5:<br>
+• Γράφετε την κάθε απάντηση όπως ακριβώς αναγράφεται στη Wikipedia (προσοχή στην ορθογραφία).<br>
+• Έχετε δικαίωμα μόνο ενός λάθους.<br>
+• Αν η απάντηση είναι από 6η έως 15η θέση, εμφανίζεται κανονικά θέση και αριθμός.<br>
+• Αν είναι 16+ θέση, εμφανίζεται μόνο αυτό που γράψατε χωρίς θέση.<br>
+• Αν βρείτε 4 σωστές και έχετε 1 λάθος, μπορείτε να σταματήσετε για 1 πόντο (ή 2 αν έχετε x2).<br><br>
+
+⚡ 50-50 & Πάνω-Κάτω:<br>
+• Δείτε πρώτα επιλογές<br>
+• Μετά εμφανίζεται η σωστή απάντηση<br><br>
+
+Καλή επιτυχία 😎
+
+</p>
+  </div>
+</div>
+
+<div id="finalModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
+z-index:99999;
+flex-direction:column;
+">
+
+<div id="confetti" style="
+position:absolute;
+width:100%;
+height:100%;
+pointer-events:none;
+"></div>
+
+<div style="
+background:#1e293b;
+padding:40px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 30px black;
+z-index:2;
+">
+
+<h1 id="finalText"></h1>
+
+<p style="margin-top:20px;font-size:18px;">
+Μπορείς να ξαναδείς τις ερωτήσεις
+</p>
+
+<button onclick="closeFinalModal()" style="
+margin-top:15px;
+padding:10px 20px;
+font-size:18px;
+border-radius:10px;
+cursor:pointer;
+">
+Δες τις ερωτήσεις
+</button>
+
+</div>
+</div>
+
+</body>
+</html>
